@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Percolation  {
 
-    enum Status {
+    private enum Status {
         CLOSE,
         OPEN,
         FULL
@@ -41,24 +41,19 @@ public class Percolation  {
         int downX = i + 1;
         if (leftY > 0 && isOpen(i, leftY)) {
             weightedQuickUnionUF.union(convert(i - 1, j - 1), convert(i - 1, leftY - 1));
-            percolationArray[i-1][leftY - 1] = Status.FULL;
         }
         if (rightY <= size && isOpen(i, rightY)) {
             weightedQuickUnionUF.union(convert(i - 1, j - 1), convert(i - 1, rightY - 1));
-            percolationArray[i-1][rightY - 1] = Status.FULL;
         }
         if (upX > 0 && isOpen(upX, j)) {
             weightedQuickUnionUF.union(convert(i - 1, j - 1), convert(upX - 1, j - 1));
-            percolationArray[upX - 1][j - 1] = Status.FULL;
         }
         if (downX <= size && isOpen(downX, j)) {
             weightedQuickUnionUF.union(convert(i -1, j - 1), convert(downX - 1, j - 1));
-            percolationArray[downX - 1][j - 1] = Status.FULL;
         }
 
         if (i == size) {
             weightedQuickUnionUF.union(convert(i-1, j-1), size * size + 1);
-            percolationArray[i-1][size - 1] = Status.FULL;
         }
 
     }
@@ -68,7 +63,7 @@ public class Percolation  {
     }
     public boolean isFull(int i, int j) {    // is site (row i, column j) full?
         validate(i, j);
-        return percolationArray[i-1][j-1] == Status.FULL;
+        return isOpen(i, j) && weightedQuickUnionUF.connected(convert(i - 1, j - 1),size * size);
     }
     public boolean percolates() {     // does the system percolate?
         return weightedQuickUnionUF.connected(size*size, size*size + 1);
